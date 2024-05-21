@@ -43,7 +43,23 @@ export function BoardView() {
   }, []);
 
   function handleClickRemove() {
-    axios.delete(`/api/board/${id}`);
+    axios
+      .delete(`/api/board/${id}`)
+      .then(() => {
+        toast({
+          status: "success",
+          description: `${id}번 게시물이 삭제되었습니다.`,
+          position: "top",
+        });
+        navigate("/");
+      })
+      .catch(() => {
+        toast({
+          status: "error",
+          description: `게시물이 삭제되지 않았습니다.`,
+          position: "top",
+        });
+      });
   }
 
   if (board === null) {
@@ -79,7 +95,12 @@ export function BoardView() {
           </FormControl>
         </Box>
         <Box>
-          <Button colorScheme={"blue"}>수정</Button>
+          <Button
+            colorScheme={"blue"}
+            onClick={() => navigate(`/edit/${board.id}`)}
+          >
+            수정
+          </Button>
           <Button colorScheme={"red"} onClick={onOpen}>
             삭제
           </Button>
