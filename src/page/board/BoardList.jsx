@@ -1,10 +1,17 @@
 import { Box, Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
-import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export function BoardList() {
   const [boardList, setBoardList] = useState([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    axios.get("/api/board/list").then((res) => setBoardList(res.data));
+  }, []);
 
   return (
     <Box>
@@ -22,14 +29,19 @@ export function BoardList() {
             </Tr>
           </Thead>
           <Tbody>
-            {boardList.map((board) => {
-              <Tr key={board.id}>
+            {boardList.map((board) => (
+              <Tr
+                key={board.id}
+                onClick={() => navigate(`/board/${board.id}`)}
+                cursor={"pointer"}
+                _hover={{ bgColor: "gray.200" }}
+              >
                 <Td>{board.id}</Td>
                 <Td>{board.title}</Td>
                 <Td>{board.writer}</Td>
                 <Td>{board.inserted}</Td>
-              </Tr>;
-            })}
+              </Tr>
+            ))}
           </Tbody>
         </Table>
       </Box>
