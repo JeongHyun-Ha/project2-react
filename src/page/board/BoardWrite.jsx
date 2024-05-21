@@ -17,8 +17,10 @@ export function BoardWrite() {
   const [writer, setWriter] = useState("");
   const toast = useToast();
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   function handleSaveClick() {
+    setLoading(true);
     axios
       .post("/api/board/add", { title, content, writer })
       .then(() => {
@@ -40,7 +42,7 @@ export function BoardWrite() {
           });
         }
       })
-      .finally();
+      .finally(() => setLoading(false));
   }
 
   let disableSaveBtn = false;
@@ -75,6 +77,7 @@ export function BoardWrite() {
         </Box>
         <Box>
           <Button
+            isLoading={loading}
             isDisabled={disableSaveBtn}
             colorScheme={"blue"}
             onClick={handleSaveClick}
