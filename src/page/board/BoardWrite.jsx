@@ -55,6 +55,7 @@ export function BoardWrite() {
   if (writer.trim().length === 0) {
     disableSaveBtn = true;
   }
+
   return (
     <Box>
       <Box>글 작성 화면</Box>
