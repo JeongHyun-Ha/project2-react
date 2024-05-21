@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import {
   Box,
+  Button,
   FormControl,
   FormLabel,
   Input,
@@ -30,9 +31,12 @@ export function BoardView() {
           });
         }
         navigate("/");
-      })
-      .finally();
+      });
   }, []);
+
+  function handleClickRemove() {
+    axios.delete(`/api/board/${id}`);
+  }
 
   if (board === null) {
     return <Spinner />;
@@ -65,6 +69,12 @@ export function BoardView() {
             <FormLabel>작성 일시</FormLabel>
             <Input type={"datetime-local"} value={board.inserted} readOnly />
           </FormControl>
+        </Box>
+        <Box>
+          <Button colorScheme={"blue"}>수정</Button>
+          <Button colorScheme={"red"} onClick={handleClickRemove}>
+            삭제
+          </Button>
         </Box>
       </Box>
     </Box>
