@@ -23,16 +23,36 @@ export function BoardWrite() {
       .post("/api/board/add", { title, content, writer })
       .then(() => {
         toast({
-          description: "새 글이 등록되었습니다.",
           status: "success",
+          description: "새 글이 등록되었습니다.",
           position: "top",
         });
         navigate("/");
       })
-      .catch()
+      .catch((e) => {
+        const code = e.response.status;
+
+        if (code === 400) {
+          toast({
+            status: "error",
+            description: "빈 칸을 입력해주세요.",
+            position: "top",
+          });
+        }
+      })
       .finally();
   }
 
+  let disableSaveBtn = false;
+  if (title.trim().length === 0) {
+    disableSaveBtn = true;
+  }
+  if (content.trim().length === 0) {
+    disableSaveBtn = true;
+  }
+  if (writer.trim().length === 0) {
+    disableSaveBtn = true;
+  }
   return (
     <Box>
       <Box>글 작성 화면</Box>
@@ -54,7 +74,11 @@ export function BoardWrite() {
           <Input onChange={(e) => setWriter(e.target.value)} />
         </Box>
         <Box>
-          <Button colorScheme={"blue"} onClick={handleSaveClick}>
+          <Button
+            isDisabled={disableSaveBtn}
+            colorScheme={"blue"}
+            onClick={handleSaveClick}
+          >
             저장
           </Button>
         </Box>
