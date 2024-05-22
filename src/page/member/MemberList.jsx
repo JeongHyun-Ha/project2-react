@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   Spinner,
@@ -9,9 +9,14 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
+import axios from "axios";
 
 export function MemberList() {
   const [memberList, setMemberList] = useState([]);
+
+  useEffect(() => {
+    axios.get("/api/member/list").then((res) => setMemberList(res.data));
+  }, []);
 
   if (memberList.length === 0) {
     return <Spinner />;
@@ -35,7 +40,7 @@ export function MemberList() {
                 <Td>{member.id}</Td>
                 <Td>{member.email}</Td>
                 <Td>{member.nickName}</Td>
-                <Td>{member.inserted}</Td>
+                <Td>{member.signupDateAndTime}</Td>
               </Tr>
             ))}
           </Tbody>
