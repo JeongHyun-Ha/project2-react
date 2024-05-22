@@ -99,6 +99,22 @@ export function MemberSignup() {
 
   const isCheckedPwd = password === passwordCheck;
 
+  let isDisabled = false;
+
+  if (!isCheckedPwd) {
+    isDisabled = true;
+  }
+
+  if (
+    !(
+      email.trim().length > 0 &&
+      password.trim().length > 0 &&
+      nickName.trim().length > 0
+    )
+  ) {
+    isDisabled = true;
+  }
+
   return (
     <Box>
       <Box>회원 가입</Box>
@@ -156,6 +172,7 @@ export function MemberSignup() {
         </Box>
         <Box>
           <Button
+            isDisabled={isDisabled}
             isLoading={isLoading}
             ding
             colorScheme={"blue"}
