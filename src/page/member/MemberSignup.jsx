@@ -19,6 +19,8 @@ export function MemberSignup() {
   const [passwordCheck, setPasswordCheck] = useState("");
   const [nickName, setNickName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isCheckedEmail, setIsCheckedEmail] = useState(false);
+  const [isCheckNick, setIsCheckNick] = useState(false);
   const toast = useToast();
   const navigate = useNavigate();
 
@@ -71,6 +73,7 @@ export function MemberSignup() {
             position: "top",
           });
         }
+        setIsCheckedEmail(true);
       })
       .finally();
   }
@@ -93,6 +96,7 @@ export function MemberSignup() {
             position: "top",
           });
         }
+        setIsCheckNick(true);
       })
       .finally();
   }
@@ -115,6 +119,13 @@ export function MemberSignup() {
     isDisabled = true;
   }
 
+  if (!isCheckedEmail) {
+    isDisabled = true;
+  }
+  if (!isCheckNick) {
+    isDisabled = true;
+  }
+
   return (
     <Box>
       <Box>회원 가입</Box>
@@ -123,7 +134,12 @@ export function MemberSignup() {
           <FormControl>
             <FormLabel>이메일</FormLabel>
             <InputGroup>
-              <Input onChange={(e) => setEmail(e.target.value)} />
+              <Input
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  setIsCheckedEmail(false);
+                }}
+              />
               <InputRightElement w={"75px"} mr={1}>
                 <Button
                   size={"sm"}
@@ -157,7 +173,12 @@ export function MemberSignup() {
           <FormControl>
             <FormLabel>닉네임</FormLabel>
             <InputGroup>
-              <Input onChange={(e) => setNickName(e.target.value)} />
+              <Input
+                onChange={(e) => {
+                  setNickName(e.target.value);
+                  setIsCheckNick(false);
+                }}
+              />
               <InputRightElement w={"75px"} mr={1}>
                 <Button
                   size={"sm"}
