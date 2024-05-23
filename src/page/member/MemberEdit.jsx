@@ -21,7 +21,8 @@ import { useNavigate, useParams } from "react-router-dom";
 
 export function MemberEdit() {
   const [member, setMember] = useState(null);
-  const [oldPassword, setOldPassword] = useState();
+  const [oldPassword, setOldPassword] = useState("");
+  const [passwordCheck, setPasswordCheck] = useState(false);
   const { id } = useParams();
   const toast = useToast();
   const navigate = useNavigate();
@@ -50,6 +51,14 @@ export function MemberEdit() {
       .then((res) => {})
       .catch(() => {})
       .finally(() => {});
+  }
+
+  let isDisableSaveBtn = false;
+
+  if (member !== null) {
+    if (member.password !== passwordCheck) {
+      isDisableSaveBtn = true;
+    }
   }
 
   if (member === null) {
@@ -83,7 +92,10 @@ export function MemberEdit() {
         <Box>
           <FormControl>
             <FormLabel>비밀번호 확인</FormLabel>
-            <Input />
+            <Input onChange={(e) => setPasswordCheck(e.target.value)} />
+            {member.password === passwordCheck || (
+              <FormHelperText>비밀번호가 일치하지 않습니다.</FormHelperText>
+            )}
           </FormControl>
         </Box>
         <Box>
@@ -96,7 +108,11 @@ export function MemberEdit() {
           />
         </Box>
         <Box>
-          <Button onClick={onOpen} colorScheme={"blue"}>
+          <Button
+            onClick={onOpen}
+            colorScheme={"blue"}
+            isDisabled={isDisableSaveBtn}
+          >
             저장
           </Button>
         </Box>
