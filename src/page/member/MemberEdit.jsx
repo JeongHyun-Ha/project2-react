@@ -5,6 +5,12 @@ import {
   FormHelperText,
   FormLabel,
   Input,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   Spinner,
   useDisclosure,
   useToast,
@@ -15,7 +21,7 @@ import { useNavigate, useParams } from "react-router-dom";
 
 export function MemberEdit() {
   const [member, setMember] = useState(null);
-  const [nickName, setNickName] = useState("");
+  const [oldPassword, setOldPassword] = useState();
   const { id } = useParams();
   const toast = useToast();
   const navigate = useNavigate();
@@ -25,7 +31,6 @@ export function MemberEdit() {
     axios
       .get(`/api/member/${id}`)
       .then((res) => {
-        setNickName(res.data.nickName);
         const member1 = res.data;
         setMember({ ...member1, password: "" });
       })
@@ -41,7 +46,7 @@ export function MemberEdit() {
 
   function handleClickSave() {
     axios
-      .put("/api/member/edit", member)
+      .put("/api/member/edit", { ...member, oldPassword })
       .then((res) => {})
       .catch(() => {})
       .finally(() => {});
@@ -49,11 +54,6 @@ export function MemberEdit() {
 
   if (member === null) {
     return <Spinner />;
-  }
-  let isDisable = true;
-
-  if (member.nickName.trim().length > 0) {
-    isDisable = false;
   }
 
   return (
@@ -96,15 +96,29 @@ export function MemberEdit() {
           />
         </Box>
         <Box>
-          <Button
-            onClick={handleClickSave}
-            colorScheme={"blue"}
-            isDisabled={isDisable}
-          >
+          <Button onClick={onOpen} colorScheme={"blue"}>
             저장
           </Button>
         </Box>
       </Box>
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>기존 비밀번호 확인</ModalHeader>
+          <ModalBody>
+            <FormControl>
+              <FormLabel>기존 비밀번호</FormLabel>
+              <Input onChange={(e) => setOldPassword(e.target.value)} />
+            </FormControl>
+          </ModalBody>
+          <ModalFooter>
+            <Button onClick={onClose}>취소</Button>
+            <Button onClick={handleClickSave} colorScheme={"blue"}>
+              확인
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Box>
   );
 }
