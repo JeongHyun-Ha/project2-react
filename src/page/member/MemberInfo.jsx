@@ -24,6 +24,7 @@ export function MemberInfo() {
   const [member, setMember] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const { isOpen, onClose, onOpen } = useDisclosure();
+  const [password, setPassword] = useState("");
 
   const toast = useToast();
   const navigate = useNavigate();
@@ -45,7 +46,7 @@ export function MemberInfo() {
   function handleClickRemove() {
     setIsLoading(true);
     axios
-      .delete(`/api/member/${id}`)
+      .delete(`/api/member/${id}`, { data: { id, password } })
       .then(() => {
         toast({
           status: "success",
@@ -63,6 +64,8 @@ export function MemberInfo() {
       })
       .finally(() => {
         setIsLoading(false);
+        setPassword("");
+        onClose();
       });
   }
 
@@ -103,7 +106,16 @@ export function MemberInfo() {
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>회원 탈퇴</ModalHeader>
-          <ModalBody>정말 탈퇴하시겠습니까?</ModalBody>
+          <ModalBody>
+            <FormControl>
+              <FormLabel>비밀번호</FormLabel>
+              <Input
+                onChange={(e) => setPassword(e.target.value)}
+                value={password}
+              />
+            </FormControl>
+            <Box>정말 탈퇴하시겠습니까?</Box>
+          </ModalBody>
           <ModalFooter>
             <Button
               colorScheme={"red"}
