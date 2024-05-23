@@ -30,10 +30,6 @@ export function BoardEdit() {
     axios.get(`/api/board/${id}`).then((res) => setBoard(res.data));
   }, []);
 
-  if (board === null) {
-    return <Spinner />;
-  }
-
   function handleClickSave() {
     axios
       .put(`/api/board/edit`, board)
@@ -58,6 +54,10 @@ export function BoardEdit() {
       .finally(() => {
         onClose();
       });
+  }
+
+  if (board === null) {
+    return <Spinner />;
   }
 
   return (

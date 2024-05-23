@@ -15,6 +15,7 @@ import { useNavigate, useParams } from "react-router-dom";
 
 export function MemberEdit() {
   const [member, setMember] = useState(null);
+  const [nickName, setNickName] = useState("");
   const { id } = useParams();
   const toast = useToast();
   const navigate = useNavigate();
@@ -24,12 +25,14 @@ export function MemberEdit() {
     axios
       .get(`/api/member/${id}`)
       .then((res) => {
-        setMember({ ...res.data, password: "" });
+        setNickName(res.data.nickName);
+        const member1 = res.data;
+        setMember({ ...member1, password: "" });
       })
-      .catch((err) => {
+      .catch(() => {
         toast({
-          status: "error",
-          description: "존재하지 않는 회원입니다.",
+          status: "warning",
+          description: "회원 정보 조회 중 문제가 발생하였습니다.",
           position: "top",
         });
         navigate("/");
@@ -39,18 +42,18 @@ export function MemberEdit() {
   function handleClickSave() {
     axios
       .put("/api/member/edit", member)
-      .then((res) => {
-        toast({
-          status: "success",
-          description: "수정이 완료되었습니다.",
-          position: "top",
-        });
-      })
-      .catch((err) => {});
+      .then((res) => {})
+      .catch(() => {})
+      .finally(() => {});
   }
 
   if (member === null) {
     return <Spinner />;
+  }
+  let isDisable = true;
+
+  if (member.nickName.trim().length > 0) {
+    isDisable = false;
   }
 
   return (
@@ -60,20 +63,20 @@ export function MemberEdit() {
         <Box>
           <FormControl>
             <FormLabel>이메일</FormLabel>
-            <Input value={member.email} readOnly />
+            <Input readOnly value={member.email} />
           </FormControl>
         </Box>
         <Box>
           <FormControl>
             <FormLabel>비밀번호</FormLabel>
             <Input
-              placeholder={"암호를 변경하려면 입력하세요."}
               onChange={(e) =>
                 setMember({ ...member, password: e.target.value })
               }
+              placeholder={"비밀번호를 변경하려면 입력하세요"}
             />
             <FormHelperText>
-              입력하지 않으면 기존 암호를 변경하지 않습니다.
+              입력하지 않으면 기존 비밀번호를 변경하지 않습니다.
             </FormHelperText>
           </FormControl>
         </Box>
@@ -84,18 +87,20 @@ export function MemberEdit() {
           </FormControl>
         </Box>
         <Box>
-          <FormControl>
-            <FormLabel>닉네임</FormLabel>
-            <Input
-              defaultValue={member.nickName}
-              onChange={(e) =>
-                setMember({ ...member, nickName: e.target.value })
-              }
-            />
-          </FormControl>
+          <FormControl>닉네임</FormControl>
+          <Input
+            onChange={(e) => {
+              setMember({ ...member, nickName: e.target.value });
+            }}
+            value={member.nickName}
+          />
         </Box>
         <Box>
-          <Button colorScheme={"blue"} onClick={handleClickSave}>
+          <Button
+            onClick={handleClickSave}
+            colorScheme={"blue"}
+            isDisabled={isDisable}
+          >
             저장
           </Button>
         </Box>
