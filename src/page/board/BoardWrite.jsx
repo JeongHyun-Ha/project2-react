@@ -7,22 +7,23 @@ import {
   Textarea,
   useToast,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { LoginContext } from "../../component/LoginProvider.jsx";
 
 export function BoardWrite() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [writer, setWriter] = useState("");
   const toast = useToast();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const account = useContext(LoginContext);
 
   function handleSaveClick() {
     setLoading(true);
     axios
-      .post("/api/board/add", { title, content, writer })
+      .post("/api/board/add", { title, content })
       .then(() => {
         toast({
           status: "success",
@@ -52,9 +53,6 @@ export function BoardWrite() {
   if (content.trim().length === 0) {
     disableSaveBtn = true;
   }
-  if (writer.trim().length === 0) {
-    disableSaveBtn = true;
-  }
 
   return (
     <Box>
@@ -74,7 +72,7 @@ export function BoardWrite() {
         </Box>
         <Box>
           <FormControl>작성자</FormControl>
-          <Input onChange={(e) => setWriter(e.target.value)} />
+          <Input readOnly value={account.nickName} />
         </Box>
         <Box>
           <Button
