@@ -59,6 +59,9 @@ export function MemberEdit() {
     if (member.password !== passwordCheck) {
       isDisableSaveBtn = true;
     }
+    if (member.nickName.trim().length === 0) {
+      isDisableSaveBtn = true;
+    }
   }
 
   if (member === null) {
@@ -102,7 +105,7 @@ export function MemberEdit() {
           <FormControl>닉네임</FormControl>
           <Input
             onChange={(e) => {
-              setMember({ ...member, nickName: e.target.value });
+              setMember({ ...member, nickName: e.target.value.trim() });
             }}
             value={member.nickName}
           />
