@@ -23,7 +23,15 @@ export function BoardWrite() {
   function handleSaveClick() {
     setLoading(true);
     axios
-      .post("/api/board/add", { title, content })
+      .post(
+        "/api/board/add",
+        { title, content },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        },
+      )
       .then(() => {
         toast({
           status: "success",
