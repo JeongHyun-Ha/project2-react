@@ -24,9 +24,9 @@ import { useNavigate, useParams } from "react-router-dom";
 export function MemberEdit() {
   const [member, setMember] = useState(null);
   const [oldPassword, setOldPassword] = useState("");
-  const [passwordCheck, setPasswordCheck] = useState(false);
-  const [isCheckedNick, setIsCheckedNick] = useState(true);
   const [oldNickName, setOldNickName] = useState("");
+  const [passwordCheck, setPasswordCheck] = useState("");
+  const [isCheckedNick, setIsCheckedNick] = useState(true);
   const { id } = useParams();
   const toast = useToast();
   const navigate = useNavigate();
@@ -53,9 +53,25 @@ export function MemberEdit() {
   function handleClickSave() {
     axios
       .put("/api/member/edit", { ...member, oldPassword })
-      .then((res) => {})
-      .catch(() => {})
-      .finally(() => {});
+      .then((res) => {
+        toast({
+          status: "success",
+          description: "회원 정보가 수정되었습니다.",
+          position: "top",
+        });
+        navigate(`/member/${id}`);
+      })
+      .catch(() => {
+        toast({
+          status: "error",
+          description: "회원 정보가 수정되지 않았습니다.",
+          position: "top",
+        });
+      })
+      .finally(() => {
+        onClose();
+        setOldPassword("");
+      });
   }
 
   function handleCheckNickName() {
@@ -92,11 +108,20 @@ export function MemberEdit() {
   if (member.nickName.length === 0) {
     isDisableNickCheckBtn = true;
   }
+
+  if (isCheckedNick) {
+    isDisableNickCheckBtn = true;
+  }
+
   let isDisableSaveBtn = false;
   if (member.password !== passwordCheck) {
     isDisableSaveBtn = true;
   }
   if (member.nickName.trim().length === 0) {
+    isDisableSaveBtn = true;
+  }
+
+  if (!isCheckedNick) {
     isDisableSaveBtn = true;
   }
 
@@ -138,7 +163,9 @@ export function MemberEdit() {
           <InputGroup>
             <Input
               onChange={(e) => {
-                setMember({ ...member, nickName: e.target.value.trim() });
+                const newNickName = e.target.value.trim();
+                setMember({ ...member, nickName: newNickName });
+                setIsCheckedNick(newNickName === member.nickName);
               }}
               value={member.nickName}
             />
