@@ -1,9 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import { Box, Flex } from "@chakra-ui/react";
-import React from "react";
+import React, { useContext } from "react";
+import { LoginContext } from "./LoginProvider.jsx";
 
 export function Navbar() {
   const navigate = useNavigate();
+  const account = useContext(LoginContext);
   return (
     <Flex gap={3}>
       <Box
@@ -40,6 +42,16 @@ export function Navbar() {
         _hover={{ bgColor: "gray.200" }}
       >
         로그인
+      </Box>
+      <Box
+        onClick={() => {
+          account.logout();
+          navigate("/login");
+        }}
+        cursor={"pointer"}
+        _hover={{ bgColor: "gray.200" }}
+      >
+        로그아웃
       </Box>
     </Flex>
   );
