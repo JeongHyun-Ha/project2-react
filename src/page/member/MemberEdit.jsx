@@ -5,6 +5,8 @@ import {
   FormHelperText,
   FormLabel,
   Input,
+  InputGroup,
+  InputRightElement,
   Modal,
   ModalBody,
   ModalContent,
@@ -23,6 +25,8 @@ export function MemberEdit() {
   const [member, setMember] = useState(null);
   const [oldPassword, setOldPassword] = useState("");
   const [passwordCheck, setPasswordCheck] = useState(false);
+  const [isCheckedNick, setIsCheckedNick] = useState(true);
+  const [oldNickName, setOldNickName] = useState("");
   const { id } = useParams();
   const toast = useToast();
   const navigate = useNavigate();
@@ -34,6 +38,7 @@ export function MemberEdit() {
       .then((res) => {
         const member1 = res.data;
         setMember({ ...member1, password: "" });
+        setOldNickName(member1.nickName);
       })
       .catch(() => {
         toast({
@@ -53,19 +58,46 @@ export function MemberEdit() {
       .finally(() => {});
   }
 
-  let isDisableSaveBtn = false;
-
-  if (member !== null) {
-    if (member.password !== passwordCheck) {
-      isDisableSaveBtn = true;
-    }
-    if (member.nickName.trim().length === 0) {
-      isDisableSaveBtn = true;
-    }
+  function handleCheckNickName() {
+    axios
+      .get(`/api/member/check?nickName=${member.nickName}`)
+      .then((res) => {
+        toast({
+          status: "warning",
+          description: "사용할 수 없는 닉네임입니다.",
+          position: "top",
+        });
+      })
+      .catch((err) => {
+        if (err.response.status === 404) {
+          toast({
+            status: "info",
+            description: "사용할 수 있는 닉네임입니다.",
+            position: "top",
+          });
+        }
+        setIsCheckedNick(true);
+      })
+      .finally();
   }
 
   if (member === null) {
     return <Spinner />;
+  }
+
+  let isDisableNickCheckBtn = false;
+  if (member.nickName === oldNickName) {
+    isDisableNickCheckBtn = true;
+  }
+  if (member.nickName.length === 0) {
+    isDisableNickCheckBtn = true;
+  }
+  let isDisableSaveBtn = false;
+  if (member.password !== passwordCheck) {
+    isDisableSaveBtn = true;
+  }
+  if (member.nickName.trim().length === 0) {
+    isDisableSaveBtn = true;
   }
 
   return (
@@ -103,12 +135,24 @@ export function MemberEdit() {
         </Box>
         <Box>
           <FormControl>닉네임</FormControl>
-          <Input
-            onChange={(e) => {
-              setMember({ ...member, nickName: e.target.value.trim() });
-            }}
-            value={member.nickName}
-          />
+          <InputGroup>
+            <Input
+              onChange={(e) => {
+                setMember({ ...member, nickName: e.target.value.trim() });
+              }}
+              value={member.nickName}
+            />
+            <InputRightElement w={"75px"} mr={1}>
+              <Button
+                size={"sm"}
+                bgColor={"gray.300"}
+                onClick={handleCheckNickName}
+                isDisabled={isDisableNickCheckBtn}
+              >
+                중복확인
+              </Button>
+            </InputRightElement>
+          </InputGroup>
         </Box>
         <Box>
           <Button
