@@ -11,7 +11,6 @@ import {
   ModalHeader,
   ModalOverlay,
   Spinner,
-  Textarea,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
@@ -86,7 +85,7 @@ export function MemberInfo() {
         <Box>
           <FormControl>
             <FormLabel>닉네임</FormLabel>
-            <Textarea value={member.nickName} isReadOnly />
+            <Input value={member.nickName} isReadOnly />
           </FormControl>
         </Box>
         <Box>
@@ -96,7 +95,12 @@ export function MemberInfo() {
           </FormControl>
         </Box>
         <Box>
-          <Button colorScheme={"blue"}>회원정보 수정</Button>
+          <Button
+            colorScheme={"blue"}
+            onClick={() => navigate(`/member/edit/${member.id}`)}
+          >
+            회원정보 수정
+          </Button>
           <Button colorScheme={"red"} onClick={onOpen}>
             회원 탈퇴
           </Button>
