@@ -115,17 +115,19 @@ export function MemberInfo() {
             <Input value={member.inserted} type={"datetime-local"} isReadOnly />
           </FormControl>
         </Box>
-        <Box>
-          <Button
-            colorScheme={"blue"}
-            onClick={() => navigate(`/member/edit/${member.id}`)}
-          >
-            회원정보 수정
-          </Button>
-          <Button colorScheme={"red"} onClick={onOpen}>
-            회원 탈퇴
-          </Button>
-        </Box>
+        {account.hasAccess(member.id) && (
+          <Box>
+            <Button
+              colorScheme={"blue"}
+              onClick={() => navigate(`/member/edit/${member.id}`)}
+            >
+              회원정보 수정
+            </Button>
+            <Button colorScheme={"red"} onClick={onOpen}>
+              회원 탈퇴
+            </Button>
+          </Box>
+        )}
       </Box>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
