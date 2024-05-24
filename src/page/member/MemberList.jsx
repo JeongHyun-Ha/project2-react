@@ -8,6 +8,7 @@ import {
   Th,
   Thead,
   Tr,
+  useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -15,6 +16,8 @@ import { useNavigate } from "react-router-dom";
 export function MemberList() {
   const [memberList, setMemberList] = useState([]);
   const navigate = useNavigate();
+
+  const toast = useToast();
 
   useEffect(() => {
     axios.get("/api/member/list").then((res) => setMemberList(res.data));

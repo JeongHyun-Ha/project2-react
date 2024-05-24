@@ -32,15 +32,28 @@ export function MemberInfo() {
 
   useEffect(() => {
     axios
-      .get(`/api/member/${id}`)
+      .get(`/api/member/${id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      })
       .then((res) => setMember(res.data))
       .catch((err) => {
-        toast({
-          status: "error",
-          description: "존재하지 않는 게시물입니다.",
-          position: "top",
-        });
-        navigate("/member/list");
+        if (err.response.status === 404) {
+          toast({
+            status: "error",
+            description: "존재하지 않는 게시물입니다.",
+            position: "top",
+          });
+          navigate("/");
+        } else if (err.response.status === 403) {
+          toast({
+            status: "warning",
+            description: "접근 권한이 없습니다.",
+            position: "top",
+          });
+          navigate(-1);
+        }
       });
   }, []);
 
