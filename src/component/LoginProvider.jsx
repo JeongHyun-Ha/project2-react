@@ -17,27 +17,31 @@ export function LoginProvider({ children }) {
     login(token);
   }, []);
 
-  function isAdmin() {
-    return authority.includes("admin");
-  }
-
+  // isLoggedIn
   function isLoggedIn() {
     return Date.now() < expired * 1000;
   }
 
+  // 권한 있는 지? 확인
   function hasAccess(param) {
     return id == param;
   }
 
+  function isAdmin() {
+    return authority.includes("admin");
+  }
+
+  // login
   function login(token) {
     localStorage.setItem("token", token);
     const payload = jwtDecode(token);
     setExpired(payload.exp);
     setId(payload.sub);
     setNickName(payload.nickName);
-    setAuthority(payload.scope.split(" "));
+    setAuthority(payload.scope.split(" ")); // "admin manager user"
   }
 
+  // logout
   function logout() {
     localStorage.removeItem("token");
     setExpired(0);
