@@ -44,7 +44,11 @@ export function BoardView() {
 
   function handleClickRemove() {
     axios
-      .delete(`/api/board/${id}`)
+      .delete(`/api/board/${id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      })
       .then(() => {
         toast({
           status: "success",
@@ -59,6 +63,7 @@ export function BoardView() {
           description: `게시물이 삭제되지 않았습니다.`,
           position: "top",
         });
+        navigate("/");
       });
   }
 
