@@ -38,10 +38,22 @@ export function BoardList() {
       setBoardList(res.data.boardList);
       setPageInfo(res.data.pageInfo);
     });
+    setSearchType("all");
+    setSearchKeyword("");
+
+    const typeParam = searchParams.get("type");
+    const keywordParam = searchParams.get("keyword");
+    if (typeParam) {
+      setSearchType(typeParam);
+    }
+    if (keywordParam) {
+      setSearchKeyword(keywordParam);
+    }
   }, [searchParams]);
 
   const handleNavPage = (page) => () => {
-    navigate("/?page=" + page);
+    searchParams.set("page", page);
+    navigate(`/?${searchParams}`);
   };
 
   function handleSearchClick() {
@@ -58,55 +70,64 @@ export function BoardList() {
     <Box>
       <Box>게시물 목록</Box>
       <Box>
-        <Table>
-          <Thead>
-            <Tr>
-              <Th>#</Th>
-              <Th>제목</Th>
-              <Th>
-                <FontAwesomeIcon icon={faUser} />
-              </Th>
-              <Th>작성 일시</Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            {boardList.map((board) => (
-              <Tr
-                key={board.id}
-                onClick={() => navigate(`/board/${board.id}`)}
-                cursor={"pointer"}
-                _hover={{ bgColor: "gray.200" }}
-              >
-                <Td>{board.id}</Td>
-                <Td>{board.title}</Td>
-                <Td>{board.writer}</Td>
-                <Td>{board.inserted}</Td>
+        {boardList.length === 0 && <Center>조회 결과가 없습니다.</Center>}
+        {boardList.length > 0 && (
+          <Table>
+            <Thead>
+              <Tr>
+                <Th>#</Th>
+                <Th>제목</Th>
+                <Th>
+                  <FontAwesomeIcon icon={faUser} />
+                </Th>
+                <Th>작성 일시</Th>
               </Tr>
-            ))}
-          </Tbody>
-        </Table>
+            </Thead>
+            <Tbody>
+              {boardList.map((board) => (
+                <Tr
+                  key={board.id}
+                  onClick={() => navigate(`/board/${board.id}`)}
+                  cursor={"pointer"}
+                  _hover={{ bgColor: "gray.200" }}
+                >
+                  <Td>{board.id}</Td>
+                  <Td>{board.title}</Td>
+                  <Td>{board.writer}</Td>
+                  <Td>{board.inserted}</Td>
+                </Tr>
+              ))}
+            </Tbody>
+          </Table>
+        )}
       </Box>
       <Box>
-        <Flex>
-          <Box>
-            <Select onChange={(e) => setSearchType(e.target.value)}>
-              <option value="all">전체</option>
-              <option value="text">글</option>
-              <option value="nickName">작성자</option>
-            </Select>
-          </Box>
-          <Box>
-            <Input
-              onChange={(e) => setSearchKeyword(e.target.value)}
-              placeholder={"검색어"}
-            />
-          </Box>
-          <Box>
-            <Button onClick={handleSearchClick}>
-              <FontAwesomeIcon icon={faMagnifyingGlass} />
-            </Button>
-          </Box>
-        </Flex>
+        <Center>
+          <Flex>
+            <Box>
+              <Select
+                value={searchType}
+                onChange={(e) => setSearchType(e.target.value)}
+              >
+                <option value="all">전체</option>
+                <option value="text">글</option>
+                <option value="nickName">작성자</option>
+              </Select>
+            </Box>
+            <Box>
+              <Input
+                value={searchKeyword}
+                onChange={(e) => setSearchKeyword(e.target.value)}
+                placeholder={"검색어"}
+              />
+            </Box>
+            <Box>
+              <Button onClick={handleSearchClick}>
+                <FontAwesomeIcon icon={faMagnifyingGlass} />
+              </Button>
+            </Box>
+          </Flex>
+        </Center>
       </Box>
       <Center>
         {pageInfo.prevPageNumber && (

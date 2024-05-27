@@ -12,7 +12,7 @@ export function Navbar() {
   return (
     <Flex gap={3}>
       <Box
-        onClick={() => navigate("/")}
+        onClick={() => navigate(`/`)}
         cursor={"pointer"}
         _hover={{
           bgColor: "gray.200",
