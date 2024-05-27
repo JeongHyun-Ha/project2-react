@@ -1,4 +1,14 @@
-import { Box, Button, Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  Table,
+  Tbody,
+  Td,
+  Th,
+  Thead,
+  Tr,
+} from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
@@ -17,6 +27,10 @@ export function BoardList() {
       setPageInfo(res.data.pageInfo);
     });
   }, [searchParams]);
+
+  const handleNavPage = (page) => () => {
+    navigate("/?page=" + page);
+  };
 
   const pageNumbers = [];
   for (let i = pageInfo.leftPageNumber; i <= pageInfo.rightPageNumber; i++) {
@@ -55,10 +69,16 @@ export function BoardList() {
           </Tbody>
         </Table>
       </Box>
-      <Box>
+      <Flex justifyContent={"center"}>
+        {pageInfo.currentPageNumber > 1 && (
+          <Button onClick={handleNavPage(1)}>맨 앞</Button>
+        )}
+        {pageInfo.prevPageNumber && (
+          <Button onClick={handleNavPage(pageInfo.prevPageNumber)}>이전</Button>
+        )}
         {pageNumbers.map((pageNumber) => (
           <Button
-            onClick={() => navigate(`/?page=${pageNumber}`)}
+            onClick={handleNavPage(pageNumber)}
             key={pageNumber}
             colorScheme={
               pageNumber === pageInfo.currentPageNumber ? "blue" : "gray"
@@ -67,7 +87,15 @@ export function BoardList() {
             {pageNumber}
           </Button>
         ))}
-      </Box>
+        {pageInfo.nextPageNumber && (
+          <Button onClick={handleNavPage(pageInfo.nextPageNumber)}>다음</Button>
+        )}
+        {pageInfo.currentPageNumber !== pageInfo.lastPageNumber && (
+          <Button onClick={handleNavPage(pageInfo.lastPageNumber)}>
+            맨 끝
+          </Button>
+        )}
+      </Flex>
     </Box>
   );
 }
