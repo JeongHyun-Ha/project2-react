@@ -1,7 +1,10 @@
 import {
   Box,
   Button,
+  Center,
   Flex,
+  Input,
+  Select,
   Table,
   Tbody,
   Td,
@@ -10,7 +13,14 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser } from "@fortawesome/free-solid-svg-icons";
+import {
+  faAngleLeft,
+  faAngleRight,
+  faAnglesLeft,
+  faAnglesRight,
+  faMagnifyingGlass,
+  faUser,
+} from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -20,6 +30,8 @@ export function BoardList() {
   const [pageInfo, setPageInfo] = useState({});
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const [searchType, setSearchType] = useState("all");
+  const [searchKeyword, setSearchKeyword] = useState();
 
   useEffect(() => {
     axios.get(`/api/board/list?${searchParams}`).then((res) => {
@@ -32,7 +44,12 @@ export function BoardList() {
     navigate("/?page=" + page);
   };
 
+  function handleSearchClick() {
+    navigate(`/?type=${searchType}&keyword=${searchKeyword}`);
+  }
+
   const pageNumbers = [];
+
   for (let i = pageInfo.leftPageNumber; i <= pageInfo.rightPageNumber; i++) {
     pageNumbers[i] = i;
   }
@@ -69,12 +86,38 @@ export function BoardList() {
           </Tbody>
         </Table>
       </Box>
-      <Flex justifyContent={"center"}>
-        {pageInfo.currentPageNumber > 1 && (
-          <Button onClick={handleNavPage(1)}>맨 앞</Button>
-        )}
+      <Box>
+        <Flex>
+          <Box>
+            <Select onChange={(e) => setSearchType(e.target.value)}>
+              <option value="all">전체</option>
+              <option value="text">글</option>
+              <option value="nickName">작성자</option>
+            </Select>
+          </Box>
+          <Box>
+            <Input
+              onChange={(e) => setSearchKeyword(e.target.value)}
+              placeholder={"검색어"}
+            />
+          </Box>
+          <Box>
+            <Button onClick={handleSearchClick}>
+              <FontAwesomeIcon icon={faMagnifyingGlass} />
+            </Button>
+          </Box>
+        </Flex>
+      </Box>
+      <Center>
         {pageInfo.prevPageNumber && (
-          <Button onClick={handleNavPage(pageInfo.prevPageNumber)}>이전</Button>
+          <>
+            <Button onClick={handleNavPage(1)}>
+              <FontAwesomeIcon icon={faAnglesLeft} />
+            </Button>
+            <Button onClick={handleNavPage(pageInfo.prevPageNumber)}>
+              <FontAwesomeIcon icon={faAngleLeft} />
+            </Button>
+          </>
         )}
         {pageNumbers.map((pageNumber) => (
           <Button
@@ -88,14 +131,16 @@ export function BoardList() {
           </Button>
         ))}
         {pageInfo.nextPageNumber && (
-          <Button onClick={handleNavPage(pageInfo.nextPageNumber)}>다음</Button>
+          <>
+            <Button onClick={handleNavPage(pageInfo.nextPageNumber)}>
+              <FontAwesomeIcon icon={faAngleRight} />
+            </Button>
+            <Button onClick={handleNavPage(pageInfo.lastPageNumber)}>
+              <FontAwesomeIcon icon={faAnglesRight} />
+            </Button>
+          </>
         )}
-        {pageInfo.currentPageNumber !== pageInfo.lastPageNumber && (
-          <Button onClick={handleNavPage(pageInfo.lastPageNumber)}>
-            맨 끝
-          </Button>
-        )}
-      </Flex>
+      </Center>
     </Box>
   );
 }
