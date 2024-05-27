@@ -1,4 +1,4 @@
-import { Box, Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
+import { Box, Button, Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
@@ -7,14 +7,21 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 
 export function BoardList() {
   const [boardList, setBoardList] = useState([]);
+  const [pageInfo, setPageInfo] = useState({});
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
   useEffect(() => {
-    axios
-      .get(`/api/board/list?${searchParams}`)
-      .then((res) => setBoardList(res.data));
-  }, []);
+    axios.get(`/api/board/list?${searchParams}`).then((res) => {
+      setBoardList(res.data.boardList);
+      setPageInfo(res.data.pageInfo);
+    });
+  }, [searchParams]);
+
+  const pageNumbers = [];
+  for (let i = 1; i <= pageInfo.lastPageNumber; i++) {
+    pageNumbers[i] = i;
+  }
 
   return (
     <Box>
@@ -47,6 +54,16 @@ export function BoardList() {
             ))}
           </Tbody>
         </Table>
+      </Box>
+      <Box>
+        {pageNumbers.map((pageNumber) => (
+          <Button
+            onClick={() => navigate(`/?page=${pageNumber}`)}
+            key={pageNumber}
+          >
+            {pageNumber}
+          </Button>
+        ))}
       </Box>
     </Box>
   );
