@@ -39,7 +39,12 @@ export function BoardEdit() {
 
   function handleClickSave() {
     axios
-      .put(`/api/board/edit`, board)
+      .putForm(`/api/board/edit`, {
+        id: board.id,
+        title: board.title,
+        content: board.content,
+        removeFileList,
+      })
       .then(() => {
         toast({
           status: "success",
@@ -113,10 +118,10 @@ export function BoardEdit() {
                   <FontAwesomeIcon icon={faTrashCan} />
                   <Switch
                     onChange={(e) =>
-                      handleRemoveSwitchChange(fileList.name, e.target.checked)
+                      handleRemoveSwitchChange(file.name, e.target.checked)
                     }
                   />
-                  <Text>{fileList.name}</Text>
+                  <Text>{file.name}</Text>
                 </Flex>
                 <Image
                   sx={

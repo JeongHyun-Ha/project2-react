@@ -24,6 +24,7 @@ import { LoginContext } from "../../component/LoginProvider.jsx";
 export function BoardView() {
   const { id } = useParams();
   const [board, setBoard] = useState(null);
+  const [removeFileList, setRemoveFileList] = useState([]);
   const account = useContext(LoginContext);
   const toast = useToast();
   const navigate = useNavigate();
@@ -87,8 +88,8 @@ export function BoardView() {
           </FormControl>
         </Box>
         <Box>
-          {board.files &&
-            board.files.map((file) => (
+          {board.fileList &&
+            board.fileList.map((file) => (
               <Box key={file.name} border={"2px solid black"} m={3}>
                 <Image src={file.src} />
               </Box>
