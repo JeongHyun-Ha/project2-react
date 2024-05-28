@@ -6,6 +6,7 @@ import {
   Button,
   FormControl,
   FormLabel,
+  Image,
   Input,
   Modal,
   ModalBody,
@@ -89,6 +90,14 @@ export function BoardEdit() {
               onChange={(e) => setBoard({ ...board, content: e.target.value })}
             />
           </FormControl>
+        </Box>
+        <Box>
+          {board.files &&
+            board.files.map((file) => (
+              <Box key={file.name} border={"2px solid black"} m={3}>
+                <Image src={file.src} />
+              </Box>
+            ))}
         </Box>
         <Box>
           <FormControl>
