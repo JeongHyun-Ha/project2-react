@@ -1,11 +1,12 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import {
   Box,
   Button,
   Flex,
   FormControl,
+  FormHelperText,
   FormLabel,
   Image,
   Input,
@@ -29,6 +30,7 @@ export function BoardEdit() {
   const { id } = useParams();
   const [board, setBoard] = useState(null);
   const [removeFileList, setRemoveFileList] = useState([]);
+  const [addFileList, setAddFileList] = useState([]);
   const toast = useToast();
   const navigate = useNavigate();
   const { isOpen, onClose, onOpen } = useDisclosure();
@@ -76,16 +78,22 @@ export function BoardEdit() {
       });
   }
 
-  if (board === null) {
-    return <Spinner />;
-  }
-
   function handleRemoveSwitchChange(name, checked) {
     if (checked) {
       setRemoveFileList([...removeFileList, name]);
     } else {
       setRemoveFileList(removeFileList.filter((item) => item !== name));
     }
+  }
+
+  //file 목록 작성
+  const fileNameList = [];
+  for (let addFile of addFileList) {
+    fileNameList.push(<li>{addFile.name}</li>);
+  }
+
+  if (board === null) {
+    return <Spinner />;
   }
 
   return (
@@ -133,6 +141,23 @@ export function BoardEdit() {
                 />
               </Box>
             ))}
+        </Box>
+        <Box>
+          <FormControl>
+            <FormLabel>파일</FormLabel>
+            <Input
+              multiple
+              type={"file"}
+              accept={"image/*"}
+              onChange={(e) => setAddFileList(e.target.files)}
+            />
+            <FormHelperText>
+              총 용량은 10MB, 한 파일은 1MB를 초과할 수 없습니다.
+            </FormHelperText>
+          </FormControl>
+        </Box>
+        <Box>
+          <ul>{fileNameList}</ul>
         </Box>
         <Box>
           <FormControl>
