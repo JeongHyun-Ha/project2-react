@@ -46,11 +46,7 @@ export function BoardView() {
 
   function handleClickRemove() {
     axios
-      .delete(`/api/board/${id}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      })
+      .delete(`/api/board/${id}`)
       .then(() => {
         toast({
           status: "success",
