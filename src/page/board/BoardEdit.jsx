@@ -2,6 +2,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import {
+  Badge,
   Box,
   Button,
   Flex,
@@ -89,7 +90,22 @@ export function BoardEdit() {
   //file 목록 작성
   const fileNameList = [];
   for (let addFile of addFileList) {
-    fileNameList.push(<li>{addFile.name}</li>);
+    // 이미 있는 파일과 중복된 파일명인지
+    let duplicate = false;
+    for (let file of board.fileList) {
+      if (file.name === addFile.name) {
+        duplicate = true;
+        break;
+      }
+    }
+    fileNameList.push(
+      <li>
+        {addFile.name}
+        {duplicate && (
+          <Badge colorScheme={"red"}>기존 이미지에 덮어씌입니다.</Badge>
+        )}
+      </li>,
+    );
   }
 
   if (board === null) {
