@@ -106,17 +106,17 @@ export function BoardEdit() {
           </FormControl>
         </Box>
         <Box>
-          {board.files &&
-            board.files.map((file) => (
+          {board.fileList &&
+            board.fileList.map((file) => (
               <Box key={file.name} border={"2px solid black"} m={3}>
                 <Flex>
                   <FontAwesomeIcon icon={faTrashCan} />
                   <Switch
                     onChange={(e) =>
-                      handleRemoveSwitchChange(file.name, e.target.checked)
+                      handleRemoveSwitchChange(fileList.name, e.target.checked)
                     }
                   />
-                  <Text>{file.name}</Text>
+                  <Text>{fileList.name}</Text>
                 </Flex>
                 <Image
                   sx={
