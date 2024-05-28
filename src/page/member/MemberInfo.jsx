@@ -73,7 +73,7 @@ export function MemberInfo() {
           position: "top",
         });
         account.logout();
-        navigate("/member/list");
+        navigate("/");
       })
       .catch(() => {
         toast({
@@ -81,6 +81,7 @@ export function MemberInfo() {
           description: "회원 탈퇴 중 문제가 발생하였습니다.",
           position: "top",
         });
+        navigate("/");
       })
       .finally(() => {
         setIsLoading(false);
