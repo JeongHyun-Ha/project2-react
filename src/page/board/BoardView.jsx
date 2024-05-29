@@ -24,7 +24,6 @@ import { LoginContext } from "../../component/LoginProvider.jsx";
 export function BoardView() {
   const { id } = useParams();
   const [board, setBoard] = useState(null);
-  const [removeFileList, setRemoveFileList] = useState([]);
   const account = useContext(LoginContext);
   const toast = useToast();
   const navigate = useNavigate();
@@ -41,8 +40,8 @@ export function BoardView() {
             description: "존재하지 않는 게시물입니다.",
             position: "top",
           });
+          navigate("/");
         }
-        navigate("/");
       });
   }, []);
 
