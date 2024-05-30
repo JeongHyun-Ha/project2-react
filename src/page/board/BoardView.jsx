@@ -181,11 +181,11 @@ export function BoardView() {
           <ModalHeader>삭제</ModalHeader>
           <ModalBody>삭제하시겠습니까</ModalBody>
           <ModalFooter>
-            <Button onClick={onClose} colorScheme={"gray"}>
-              취소
-            </Button>
             <Button onClick={handleClickRemove} colorScheme={"red"}>
               삭제
+            </Button>
+            <Button onClick={onClose} colorScheme={"gray"}>
+              취소
             </Button>
           </ModalFooter>
         </ModalContent>

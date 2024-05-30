@@ -205,10 +205,10 @@ export function MemberEdit() {
             </FormControl>
           </ModalBody>
           <ModalFooter>
-            <Button onClick={onClose}>취소</Button>
             <Button onClick={handleClickSave} colorScheme={"blue"}>
               확인
             </Button>
+            <Button onClick={onClose}>취소</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
