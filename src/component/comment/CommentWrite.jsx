@@ -4,10 +4,11 @@ import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 
-export function CommentWrite({ boardId }) {
+export function CommentWrite({ boardId, isSending, setIsSending }) {
   const [comment, setComment] = useState("");
 
   function handleCommentSubmitClick() {
+    setIsSending(true);
     axios
       .post("/api/comment/add", {
         boardId,
@@ -15,7 +16,7 @@ export function CommentWrite({ boardId }) {
       })
       .then((res) => {})
       .catch()
-      .finally();
+      .finally(() => setIsSending(false));
   }
 
   return (
@@ -24,7 +25,11 @@ export function CommentWrite({ boardId }) {
         placeholder={"댓글을 작성해보세요."}
         onChange={(e) => setComment(e.target.value)}
       />
-      <Button onClick={handleCommentSubmitClick} colorScheme={"blue"}>
+      <Button
+        isLoading={isSending}
+        onClick={handleCommentSubmitClick}
+        colorScheme={"blue"}
+      >
         <FontAwesomeIcon icon={faPaperPlane} />
       </Button>
     </Box>
