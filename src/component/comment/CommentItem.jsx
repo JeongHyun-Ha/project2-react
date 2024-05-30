@@ -3,15 +3,16 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 
-export function CommentItem({ comment, key }) {
+export function CommentItem({ comment, isProcessing, setIsProcessing }) {
   function handleRemoveClick(id) {
+    setIsProcessing(true);
     axios
       .delete("/api/comment/remove", {
         data: { id: comment.id },
       })
       .then((res) => {})
       .catch()
-      .finally();
+      .finally(() => setIsProcessing(false));
   }
 
   return (
@@ -25,7 +26,11 @@ export function CommentItem({ comment, key }) {
         <Box>{comment.comment}</Box>
         <Spacer />
         <Box>
-          <Button colorScheme={"red"} onClick={handleRemoveClick}>
+          <Button
+            colorScheme={"red"}
+            onClick={handleRemoveClick}
+            isLoading={isProcessing}
+          >
             <FontAwesomeIcon icon={faTrashCan} />
           </Button>
         </Box>
