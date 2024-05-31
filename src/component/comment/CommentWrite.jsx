@@ -1,4 +1,4 @@
-import { Box, Button, Textarea, Tooltip, useToast } from "@chakra-ui/react";
+import { Button, Flex, Textarea, Tooltip, useToast } from "@chakra-ui/react";
 import { useContext, useState } from "react";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -30,8 +30,9 @@ export function CommentWrite({ boardId, isProcessing, setIsProcessing }) {
   }
 
   return (
-    <Box>
+    <Flex mb={5}>
       <Textarea
+        mr={1}
         isDisabled={!account.isLoggedIn()}
         placeholder={
           account.isLoggedIn()
@@ -47,6 +48,7 @@ export function CommentWrite({ boardId, isProcessing, setIsProcessing }) {
         placement={"top"}
       >
         <Button
+          height={"80px"}
           isDisabled={comment.trim().length === 0 || !account.isLoggedIn()}
           isLoading={isProcessing}
           onClick={handleCommentSubmitClick}
@@ -55,6 +57,6 @@ export function CommentWrite({ boardId, isProcessing, setIsProcessing }) {
           <FontAwesomeIcon icon={faPaperPlane} />
         </Button>
       </Tooltip>
-    </Box>
+    </Flex>
   );
 }

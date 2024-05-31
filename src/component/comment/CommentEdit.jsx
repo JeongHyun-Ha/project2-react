@@ -62,22 +62,29 @@ export function CommentEdit({
           onChange={(e) => setCommentText(e.target.value)}
         />
       </Box>
-      <Box>
-        <Button
-          variant={"outline"}
-          colorScheme={"gray"}
-          onClick={() => setIsEditing(false)}
-        >
-          <FontAwesomeIcon icon={faXmark} />
-        </Button>
-        <Button
-          isLoading={isProcessing}
-          variant={"outline"}
-          colorScheme={"blue"}
-          onClick={onOpen}
-        >
-          <FontAwesomeIcon icon={faPaperPlane} />
-        </Button>
+      <Box margin={"auto"} ml={3}>
+        <Box>
+          <Button
+            size={"sm"}
+            mb={2}
+            isLoading={isProcessing}
+            variant={"outline"}
+            colorScheme={"blue"}
+            onClick={onOpen}
+          >
+            <FontAwesomeIcon icon={faPaperPlane} />
+          </Button>
+        </Box>
+        <Box>
+          <Button
+            size={"sm"}
+            variant={"outline"}
+            colorScheme={"gray.200"}
+            onClick={() => setIsEditing(false)}
+          >
+            <FontAwesomeIcon icon={faXmark} />
+          </Button>
+        </Box>
       </Box>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />

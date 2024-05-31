@@ -1,8 +1,10 @@
 import {
   Box,
   Button,
+  Center,
   FormControl,
   FormLabel,
+  Heading,
   Input,
   Modal,
   ModalBody,
@@ -95,67 +97,77 @@ export function MemberInfo() {
   }
 
   return (
-    <Box>
-      <Box>회원정보</Box>
-      <Box>
-        <Box>
-          <FormControl>
-            <FormLabel>이메일</FormLabel>
-            <Input value={member.email} isReadOnly />
-          </FormControl>
+    <Center>
+      <Box w={500}>
+        <Box mb={10}>
+          <Heading>회원정보</Heading>
         </Box>
         <Box>
-          <FormControl>
-            <FormLabel>닉네임</FormLabel>
-            <Input value={member.nickName} isReadOnly />
-          </FormControl>
-        </Box>
-        <Box>
-          <FormControl>
-            <FormLabel>가입일시</FormLabel>
-            <Input value={member.inserted} type={"datetime-local"} isReadOnly />
-          </FormControl>
-        </Box>
-        {account.hasAccess(member.id) && (
-          <Box>
-            <Button
-              colorScheme={"blue"}
-              onClick={() => navigate(`/member/edit/${member.id}`)}
-            >
-              회원정보 수정
-            </Button>
-            <Button colorScheme={"red"} onClick={onOpen}>
-              회원 탈퇴
-            </Button>
-          </Box>
-        )}
-      </Box>
-      <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>회원 탈퇴</ModalHeader>
-          <ModalBody>
+          <Box mb={7}>
             <FormControl>
-              <FormLabel>비밀번호</FormLabel>
+              <FormLabel>이메일</FormLabel>
+              <Input value={member.email} isReadOnly />
+            </FormControl>
+          </Box>
+          <Box mb={7}>
+            <FormControl>
+              <FormLabel>닉네임</FormLabel>
+              <Input value={member.nickName} isReadOnly />
+            </FormControl>
+          </Box>
+          <Box mb={7}>
+            <FormControl>
+              <FormLabel>가입일시</FormLabel>
               <Input
-                onChange={(e) => setPassword(e.target.value)}
-                value={password}
+                value={member.inserted}
+                type={"datetime-local"}
+                isReadOnly
               />
             </FormControl>
-            <Box>정말 탈퇴하시겠습니까?</Box>
-          </ModalBody>
-          <ModalFooter>
-            <Button
-              colorScheme={"red"}
-              onClick={handleClickRemove}
-              isLoading={isLoading}
-            >
-              탈퇴
-            </Button>
-            <Button onClick={onClose}>취소</Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-    </Box>
+          </Box>
+          {account.hasAccess(member.id) && (
+            <Box mb={7}>
+              <Button
+                mr={2}
+                colorScheme={"blue"}
+                onClick={() => navigate(`/member/edit/${member.id}`)}
+              >
+                회원정보 수정
+              </Button>
+              <Button colorScheme={"red"} onClick={onOpen}>
+                회원 탈퇴
+              </Button>
+            </Box>
+          )}
+        </Box>
+        <Modal isOpen={isOpen} onClose={onClose}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>회원 탈퇴</ModalHeader>
+            <ModalBody>
+              <FormControl>
+                <FormLabel>비밀번호</FormLabel>
+                <Input
+                  onChange={(e) => setPassword(e.target.value)}
+                  value={password}
+                />
+              </FormControl>
+              <Box>정말 탈퇴하시겠습니까?</Box>
+            </ModalBody>
+            <ModalFooter>
+              <Button
+                mr={2}
+                colorScheme={"red"}
+                onClick={handleClickRemove}
+                isLoading={isLoading}
+              >
+                탈퇴
+              </Button>
+              <Button onClick={onClose}>취소</Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+      </Box>
+    </Center>
   );
 }

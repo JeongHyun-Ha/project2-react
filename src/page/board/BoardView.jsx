@@ -4,6 +4,9 @@ import axios from "axios";
 import {
   Box,
   Button,
+  Card,
+  CardBody,
+  Center,
   Flex,
   FormControl,
   FormLabel,
@@ -101,95 +104,100 @@ export function BoardView() {
   }
 
   return (
-    <Box>
-      <Flex>
-        <Heading>{board.id}번 게시물</Heading>
-        <Spacer />
-        {isLikeProcessing || (
+    <Center>
+      <Box w={500}>
+        <Box mb={10}>
           <Flex>
-            <Tooltip
-              label={"로그인 해주세요."}
-              hasArrow
-              isDisabled={account.isLoggedIn()}
-            >
-              <Box
-                onClick={handleClickLike}
-                cursor={"pointer"}
-                fontSize={"3xl"}
-                color={"red"}
-              >
-                {like.like && <FontAwesomeIcon icon={fullHeart} />}
-                {like.like || <FontAwesomeIcon icon={emptyHeart} />}
-              </Box>
-            </Tooltip>
-            <Box fontSize={"3xl"}>{like.count}</Box>
+            <Heading>{board.id}번 게시물</Heading>
+            <Spacer />
+            {isLikeProcessing || (
+              <Flex>
+                <Tooltip
+                  label={"로그인 해주세요."}
+                  hasArrow
+                  isDisabled={account.isLoggedIn()}
+                >
+                  <Box
+                    onClick={handleClickLike}
+                    cursor={"pointer"}
+                    fontSize={"2xl"}
+                    color={"red"}
+                  >
+                    {like.like && <FontAwesomeIcon icon={fullHeart} />}
+                    {like.like || <FontAwesomeIcon icon={emptyHeart} />}
+                  </Box>
+                </Tooltip>
+                <Box ml={3} fontSize={"2xl"}>
+                  {like.count}
+                </Box>
+              </Flex>
+            )}
+            {isLikeProcessing && <Spinner />}
           </Flex>
-        )}
-        {isLikeProcessing && <Spinner />}
-      </Flex>
-      <Box>
-        <Box>
-          <FormControl>
-            <FormLabel>제목</FormLabel>
-            <Input value={board.title} readOnly />
-          </FormControl>
         </Box>
         <Box>
-          <FormControl>
-            <FormLabel>내용</FormLabel>
-            <Textarea value={board.content} readOnly />
-          </FormControl>
-        </Box>
-        <Box>
-          {board.fileList &&
-            board.fileList.map((file) => (
-              <Box key={file.name} border={"2px solid black"} m={3}>
-                <Image src={file.src} />
-              </Box>
-            ))}
-        </Box>
-        <Box>
-          <FormControl>
-            <FormLabel>작성자</FormLabel>
-            <Input value={board.writer} readOnly />
-          </FormControl>
-        </Box>
-        <Box>
-          <FormControl>
-            <FormLabel>작성 일시</FormLabel>
-            <Input type={"datetime-local"} value={board.inserted} readOnly />
-          </FormControl>
-        </Box>
-        {account.hasAccess(board.memberId) && (
-          <Box>
-            <Button
-              colorScheme={"blue"}
-              onClick={() => navigate(`/edit/${board.id}`)}
-            >
-              수정
-            </Button>
-            <Button colorScheme={"red"} onClick={onOpen}>
-              삭제
-            </Button>
+          <Box mb={7}>
+            <FormControl>
+              <FormLabel>제목</FormLabel>
+              <Input value={board.title} readOnly />
+            </FormControl>
           </Box>
-        )}
+          <Box mb={7}>
+            <FormControl>
+              <FormLabel>내용</FormLabel>
+              <Textarea value={board.content} readOnly />
+            </FormControl>
+          </Box>
+          <Box mb={7}>
+            {board.fileList &&
+              board.fileList.map((file) => (
+                <Card key={file.name} m={3}>
+                  <CardBody>
+                    <Image src={file.src} />
+                  </CardBody>
+                </Card>
+              ))}
+          </Box>
+          <Box mb={7}>
+            <FormControl>
+              <FormLabel>작성자</FormLabel>
+              <Input value={board.writer} readOnly />
+            </FormControl>
+          </Box>
+
+          {account.hasAccess(board.memberId) && (
+            <Box mb={7}>
+              <Button
+                mr={2}
+                colorScheme={"blue"}
+                onClick={() => navigate(`/edit/${board.id}`)}
+              >
+                수정
+              </Button>
+              <Button colorScheme={"red"} onClick={onOpen}>
+                삭제
+              </Button>
+            </Box>
+          )}
+        </Box>
+        <Box mb={20}></Box>
+        <CommentComponent boardId={board.id} />
+        <Modal isOpen={isOpen} onClose={onClose}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>삭제</ModalHeader>
+            <ModalBody>삭제하시겠습니까</ModalBody>
+            <ModalFooter>
+              <Button onClick={handleClickRemove} colorScheme={"red"} mr={2}>
+                삭제
+              </Button>
+              <Button onClick={onClose} colorScheme={"gray"}>
+                취소
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
       </Box>
-      <CommentComponent boardId={board.id} />
-      <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>삭제</ModalHeader>
-          <ModalBody>삭제하시겠습니까</ModalBody>
-          <ModalFooter>
-            <Button onClick={handleClickRemove} colorScheme={"red"}>
-              삭제
-            </Button>
-            <Button onClick={onClose} colorScheme={"gray"}>
-              취소
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-    </Box>
+    </Center>
   );
 }

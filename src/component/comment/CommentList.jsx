@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Box } from "@chakra-ui/react";
+import { Box, Card, CardBody, Stack, StackDivider } from "@chakra-ui/react";
 import { CommentItem } from "./CommentItem.jsx";
 
 export function CommentList({ boardId, isProcessing, setIsProcessing }) {
@@ -22,15 +22,19 @@ export function CommentList({ boardId, isProcessing, setIsProcessing }) {
   }
 
   return (
-    <Box>
-      {commentList.map((comment) => (
-        <CommentItem
-          isProcessing={isProcessing}
-          setIsProcessing={setIsProcessing}
-          comment={comment}
-          key={comment.id}
-        />
-      ))}
-    </Box>
+    <Card>
+      <CardBody>
+        <Stack divider={<StackDivider />} spacing={4}>
+          {commentList.map((comment) => (
+            <CommentItem
+              isProcessing={isProcessing}
+              setIsProcessing={setIsProcessing}
+              comment={comment}
+              key={comment.id}
+            />
+          ))}
+        </Stack>
+      </CardBody>
+    </Card>
   );
 }
