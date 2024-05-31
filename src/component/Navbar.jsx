@@ -1,9 +1,15 @@
 import { useNavigate } from "react-router-dom";
-import { Center, Flex, Spacer } from "@chakra-ui/react";
+import { Box, Center, Flex, Hide, Show, Spacer } from "@chakra-ui/react";
 import React, { useContext } from "react";
 import { LoginContext } from "./LoginProvider.jsx";
 import { faUser } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faHouse,
+  faPencil,
+  faRightFromBracket,
+  faUsers,
+} from "@fortawesome/free-solid-svg-icons";
 
 export function Navbar() {
   const navigate = useNavigate();
@@ -22,11 +28,17 @@ export function Navbar() {
   return (
     <Flex px={{ lg: 200, base: 0 }} gap={3} height={16} bgColor={"gray.200"}>
       <Center {...centerStyle} onClick={() => navigate(`/`)}>
-        HOME
+        <Hide below={"md"}>HOME</Hide>
+        <Show below={"md"}>
+          <FontAwesomeIcon icon={faHouse} />
+        </Show>
       </Center>
       {account.isLoggedIn() && (
         <Center {...centerStyle} onClick={() => navigate("/write")}>
-          글쓰기
+          <Hide below={"lg"}>글쓰기</Hide>
+          <Show below={"lg"}>
+            <FontAwesomeIcon icon={faPencil} />
+          </Show>
         </Center>
       )}
       <Spacer />
@@ -35,13 +47,17 @@ export function Navbar() {
           {...centerStyle}
           onClick={() => navigate(`/member/${account.id}`)}
         >
-          <FontAwesomeIcon icon={faUser} />
-          {account.nickName}
+          <Flex gap={2}>
+            <Box>
+              <FontAwesomeIcon icon={faUser} />
+            </Box>
+            <Box>{account.nickName}</Box>
+          </Flex>
         </Center>
       )}
       {account.isAdmin() && (
         <Center {...centerStyle} onClick={() => navigate("/member/list")}>
-          회원목록
+          <FontAwesomeIcon icon={faUsers} />
         </Center>
       )}
       {account.isLoggedIn() || (
@@ -62,7 +78,10 @@ export function Navbar() {
             navigate("/login");
           }}
         >
-          로그아웃
+          <Hide below={"md"}>로그아웃</Hide>
+          <Show below={"md"}>
+            <FontAwesomeIcon icon={faRightFromBracket} />
+          </Show>
         </Center>
       )}
     </Flex>
