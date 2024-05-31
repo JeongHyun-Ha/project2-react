@@ -1,4 +1,17 @@
-import { Box, Button, Flex, Textarea, useToast } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Textarea,
+  useDisclosure,
+  useToast,
+} from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPaperPlane, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
@@ -11,6 +24,7 @@ export function CommentEdit({
   isProcessing,
 }) {
   const [commentText, setCommentText] = useState(comment.comment);
+  const { onClose, onOpen, isOpen } = useDisclosure();
   const toast = useToast();
 
   function handleCommentSubmit() {
@@ -30,7 +44,7 @@ export function CommentEdit({
       .catch(() => {
         toast({
           status: "error",
-          description: "내부 에러가 발생하였습니다.",
+          description: "내부 오류가 발생하였습니다.",
           position: "top",
         });
       })
@@ -60,11 +74,26 @@ export function CommentEdit({
           isLoading={isProcessing}
           variant={"outline"}
           colorScheme={"blue"}
-          onClick={handleCommentSubmit}
+          onClick={onOpen}
         >
           <FontAwesomeIcon icon={faPaperPlane} />
         </Button>
       </Box>
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>댓글 수정</ModalHeader>
+          <ModalBody>댓글을 수정하시겠습니까?</ModalBody>
+          <ModalFooter>
+            <Button colorScheme={"blue"} onClick={handleCommentSubmit}>
+              수정
+            </Button>
+            <Button colorScheme={"gray"} onClick={onClose}>
+              취소
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Flex>
   );
 }
