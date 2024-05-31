@@ -4,6 +4,7 @@ import {
   Button,
   Center,
   Flex,
+  Heading,
   Input,
   Select,
   Table,
@@ -72,22 +73,24 @@ export function BoardList() {
 
   return (
     <Box>
-      <Box>게시물 목록</Box>
-      <Box>
+      <Box mb={10}>
+        <Heading>게시물 목록</Heading>
+      </Box>
+      <Box mb={10}>
         {boardList.length === 0 && <Center>조회 결과가 없습니다.</Center>}
         {boardList.length > 0 && (
           <Table>
             <Thead>
               <Tr>
-                <Th>#</Th>
+                <Th w={10}>#</Th>
                 <Th>제목</Th>
-                <Th>
+                <Th w={10}>
                   <FontAwesomeIcon icon={faHeart} />
                 </Th>
-                <Th>
+                <Th w={40}>
                   <FontAwesomeIcon icon={faUser} />
                 </Th>
-                <Th>작성 일시</Th>
+                <Th w={60}>작성 일시</Th>
               </Tr>
             </Thead>
             <Tbody>
@@ -123,9 +126,9 @@ export function BoardList() {
           </Table>
         )}
       </Box>
-      <Box>
+      <Box mb={10}>
         <Center>
-          <Flex>
+          <Flex gap={1}>
             <Box>
               <Select
                 value={searchType}
@@ -151,38 +154,40 @@ export function BoardList() {
           </Flex>
         </Center>
       </Box>
-      <Center>
-        {pageInfo.prevPageNumber && (
-          <>
-            <Button onClick={handleNavPage(1)}>
-              <FontAwesomeIcon icon={faAnglesLeft} />
+      <Center mb={10}>
+        <Flex gap={1}>
+          {pageInfo.prevPageNumber && (
+            <>
+              <Button onClick={handleNavPage(1)}>
+                <FontAwesomeIcon icon={faAnglesLeft} />
+              </Button>
+              <Button onClick={handleNavPage(pageInfo.prevPageNumber)}>
+                <FontAwesomeIcon icon={faAngleLeft} />
+              </Button>
+            </>
+          )}
+          {pageNumbers.map((pageNumber) => (
+            <Button
+              onClick={handleNavPage(pageNumber)}
+              key={pageNumber}
+              colorScheme={
+                pageNumber === pageInfo.currentPageNumber ? "blue" : "gray"
+              }
+            >
+              {pageNumber}
             </Button>
-            <Button onClick={handleNavPage(pageInfo.prevPageNumber)}>
-              <FontAwesomeIcon icon={faAngleLeft} />
-            </Button>
-          </>
-        )}
-        {pageNumbers.map((pageNumber) => (
-          <Button
-            onClick={handleNavPage(pageNumber)}
-            key={pageNumber}
-            colorScheme={
-              pageNumber === pageInfo.currentPageNumber ? "blue" : "gray"
-            }
-          >
-            {pageNumber}
-          </Button>
-        ))}
-        {pageInfo.nextPageNumber && (
-          <>
-            <Button onClick={handleNavPage(pageInfo.nextPageNumber)}>
-              <FontAwesomeIcon icon={faAngleRight} />
-            </Button>
-            <Button onClick={handleNavPage(pageInfo.lastPageNumber)}>
-              <FontAwesomeIcon icon={faAnglesRight} />
-            </Button>
-          </>
-        )}
+          ))}
+          {pageInfo.nextPageNumber && (
+            <>
+              <Button onClick={handleNavPage(pageInfo.nextPageNumber)}>
+                <FontAwesomeIcon icon={faAngleRight} />
+              </Button>
+              <Button onClick={handleNavPage(pageInfo.lastPageNumber)}>
+                <FontAwesomeIcon icon={faAnglesRight} />
+              </Button>
+            </>
+          )}
+        </Flex>
       </Center>
     </Box>
   );
